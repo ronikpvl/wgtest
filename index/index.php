@@ -19,6 +19,11 @@ $tmp->execute();
 $result = $tmp->fetchAll();
 
 $smarty->assign('param', '1111');
+
+
+
+56666666666666666654564
+
 */
 
 
