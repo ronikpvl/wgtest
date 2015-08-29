@@ -10,6 +10,9 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use \Smarty;
 
+
+require_once("/engine/libs/class_routing.php");
+
 $paths         = array($doctrina_paths_entity_files);
 $isDevMode     = false;
 $config        = Setup::createAnnotationMetadataConfiguration($paths, true);
