@@ -10,6 +10,7 @@ class Routing{
 
     # Конструктор инициализирует все необходимые для работы
     function __construct($settings) {
+
         # Инициализация настроек,
         # В случае если настройки не найдены, ставим флаг ошибки, вызываем обработчик ошибок
         if ($settings){
@@ -29,6 +30,7 @@ class Routing{
 
     # Метод парсит входящий урл и поочередно вызывает дочерние методы для формирования обьекта с данными
     public function parseRequestData(){
+
         # Если существует строка с GET запросом то обрабатываем ее,
         # В противном случае подключится дефолтный контроллер
         if ($_GET['url']){
@@ -41,6 +43,7 @@ class Routing{
 
     # Получение контроллера
     private function getController(){
+
         # Если существует строка с GET запросом то вытаскиваем контроллер
         # В противном случае подключаем дефолтный контроллер
         if ($this->url_parse){
@@ -55,6 +58,7 @@ class Routing{
 
     # Получение экшона
     private function getAction(){
+
         if ($this->url_parse){
             $this->action = $this->url_parse[1];
         }
@@ -62,23 +66,25 @@ class Routing{
 
     # Составляется полный путь до скрипта контроллера
     private function getPathController(){
-        // Полный путь до контроллера для подключения
+
+        # Полный путь до контроллера для подключения
         $this->include_path_controller = $this->settings['path_controller']."/".$this->controller.".php";
 
-        // Валидация составленного пути
+        # Валидация составленного пути
         $this->validatePathController();
     }
 
     # Происходит валидация пути до скрипта контроллера
     private function validatePathController(){
-        // Если запрашиваемый файл не найден, ставим флаг ошибки, вызываем обработчик ошибок
+
+        # Если запрашиваемый файл не найден, ставим флаг ошибки, вызываем обработчик ошибок
         if (!file_exists($_SERVER['DOCUMENT_ROOT'].$this->include_path_controller)){
             $this->is_error = 1;
             $this->error_type = "not_found_controller_file";
 
             $this->errorProcess();
         }
-        // Если файл существут, ошибок нет, обнуляем флаг ошибки
+        # Если файл существут, ошибок нет, обнуляем флаг ошибки
         else{
             $this->is_error = 0;
             $this->error_type = "";
