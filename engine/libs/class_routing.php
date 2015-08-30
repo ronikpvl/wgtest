@@ -90,8 +90,8 @@ class Routing{
                 break;
             }
 
-            // Если контроллер не определен , вызываем 404
-            case 'not_found_settings': {
+            // Если контроллер не определен, вызываем 404
+            case 'not_found_controller': {
                 $this->controller = '404';
                 $this->getPathController();
                 break;
