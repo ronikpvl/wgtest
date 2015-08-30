@@ -26,6 +26,40 @@ $smarty->assign('param', '1111');
 
 */
 
+/*
+echo "<pre>";
+print_r($_SERVER);
+echo "</pre>";
 
+
+echo "<pre>";
+print_r($_GET);
+echo "</pre>";
+
+
+
+
+
+ // Получение всех GET данных
+    function getData(){
+        // Собираем все GET данные что пришли к нам через ЧПУ
+        if ($this->url_parse[2]){
+            foreach($this->url_parse as $key=>$val){
+                if ($key > 1){
+                    $this->get_data[] = $val;
+                }
+            }
+        }
+
+        // Собираем все данные через пришедшие через GET
+        if (count($_GET) > 1){
+            foreach($_GET as $key=>$val){
+                if ($key != 'url'){
+                    $this->get_data[] = $val;
+                }
+            }
+        }
+    }
+*/
 $smarty->display('index.tpl');
 ?>

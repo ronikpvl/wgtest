@@ -21,7 +21,7 @@ $entityManager = EntityManager::create($dbParams, $config);
 # init Smarty
 $smarty = new Smarty;
 
-$routing = new Routing;
+$routing = new Routing($class_route_settings);
 
 # init smarty templates dir
 $smarty->setTemplateDir($smarty_template_dir);

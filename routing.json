@@ -1,0 +1,11 @@
+{
+    "user_data": {
+        "url": "{lobuda}/{:first_param}/{:second_param}",
+        "defaults": {
+            "first_param": 1,
+            "first_param": 2
+        },
+        "class"  : "MyAppController/{lkjnkubn}",
+        "action" : "addition"
+    }
+}
