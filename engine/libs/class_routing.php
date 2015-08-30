@@ -8,11 +8,10 @@ class Routing{
     public   $include_path_controller;
     public   $settings;
 
-
-    // Конструктор инициализирует все необходимые для работы
+    # Конструктор инициализирует все необходимые для работы
     function __construct($settings) {
-        // Инициализация настроек,
-        // В случае если настройки не найдены, ставим флаг ошибки, вызываем обработчик ошибок
+        # Инициализация настроек,
+        # В случае если настройки не найдены, ставим флаг ошибки, вызываем обработчик ошибок
         if ($settings){
             $this->settings = $settings;
         }
@@ -20,39 +19,48 @@ class Routing{
             $this->is_error = 1;
             $this->error_type = "not_found_settings";
 
-            // Обработчик ошибок
+            # Обработчик ошибок
             $this->errorProcess();
         }
 
-        // Проводим роутинг согласно пришедшим данным
+        # Проводим роутинг согласно пришедшим данным
         $this->parseRequestData();
     }
 
-    // Метод парсит входящий урл и поочередно вызывает дочерние методы для формирования обьекта с данными
+    # Метод парсит входящий урл и поочередно вызывает дочерние методы для формирования обьекта с данными
     public function parseRequestData(){
-        $this->url_parse = explode("/", $_GET['url']);
+        # Если существует строка с GET запросом то обрабатываем ее,
+        # В противном случае подключится дефолтный контроллер
+        if ($_GET['url']){
+            $this->url_parse = explode("/", $_GET['url']);
+        }
 
         $this->getController();
         $this->getAction();
     }
 
-    // Получение контроллера
+    # Получение контроллера
     private function getController(){
+        # Если существует строка с GET запросом то вытаскиваем контроллер
+        # В противном случае подключаем дефолтный контроллер
         if ($this->url_parse){
             $this->controller = $this->url_parse[0];
-
-            $this->getPathController();
         }
+        else{
+            $this->controller = $this->settings['default_controller'];
+        }
+
+        $this->getPathController();
     }
 
-    // Получение экшона
+    # Получение экшона
     private function getAction(){
         if ($this->url_parse){
             $this->action = $this->url_parse[1];
         }
     }
 
-    // Составляется полный путь до скрипта контроллера
+    # Составляется полный путь до скрипта контроллера
     private function getPathController(){
         // Полный путь до контроллера для подключения
         $this->include_path_controller = $this->settings['path_controller']."/".$this->controller.".php";
@@ -61,7 +69,7 @@ class Routing{
         $this->validatePathController();
     }
 
-    // Происходит валидация пути до скрипта контроллера
+    # Происходит валидация пути до скрипта контроллера
     private function validatePathController(){
         // Если запрашиваемый файл не найден, ставим флаг ошибки, вызываем обработчик ошибок
         if (!file_exists($_SERVER['DOCUMENT_ROOT'].$this->include_path_controller)){
@@ -77,39 +85,38 @@ class Routing{
         }
     }
 
-    // Метод обрабатывает ошибки роутинга
+    # Метод обрабатывает ошибки роутинга
     private function errorProcess(){
 
-        // Происходит перебор возможных типов ошибок роутинга
+        # Происходит перебор возможных типов ошибок роутинга
         switch ($this->error_type) {
 
-            // Если не пришли настройки для текущего класса, вызываем 404
+            # Если не пришли настройки для текущего класса, вызываем 404
             case 'not_found_settings': {
                 $this->controller = '404';
                 $this->getPathController();
                 break;
             }
 
-            // Если контроллер не определен, вызываем 404
+            # Если контроллер не определен, вызываем 404
             case 'not_found_controller': {
                 $this->controller = '404';
                 $this->getPathController();
                 break;
             }
 
-            // Если контроллер не определен , вызываем 404
+            # Если контроллер не определен , вызываем 404
             case 'not_found_controller_file': {
                 $this->controller = '404';
                 $this->getPathController();
                 break;
             }
 
-            // Если тип ошибки не определен, вызываем 404
+            # Если тип ошибки не определен, вызываем 404
             default: {
                 $this->controller = '404';
                 $this->getPathController();
             }
         }
-
     }
 }

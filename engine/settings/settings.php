@@ -13,6 +13,10 @@ $smarty_template_dir = "../engine/templates/";
 // Путь к временным шаблонам Smarty
 $smarty_compile_dir  = "../engine/templates_c/";
 
-$class_route_settings = array('path_controller' => '/engine/controller');
+// Настройки для класса Routing
+$class_route_settings = array(
+                                'path_controller'    => '/engine/controller',
+                                'default_controller' => 'mainpage'
+                            );
 
 $doctrina_paths_entity_files = "/path/to/entity-files";
