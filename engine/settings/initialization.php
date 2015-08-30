@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 use \Smarty;
 
 
-require_once("/engine/libs/class_routing.php");
+require_once("../engine/libs/class_routing.php");
 
 $paths         = array($doctrina_paths_entity_files);
 $isDevMode     = false;
@@ -20,6 +20,8 @@ $entityManager = EntityManager::create($dbParams, $config);
 
 # init Smarty
 $smarty = new Smarty;
+
+$routing = new Routing;
 
 # init smarty templates dir
 $smarty->setTemplateDir($smarty_template_dir);
