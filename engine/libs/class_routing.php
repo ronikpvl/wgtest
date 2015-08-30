@@ -8,7 +8,7 @@ class Routing{
     public   $include_path_controller;
     public   $settings;
 
-    # Конструктор инициализирует все необходимые для работы
+    # Конструктор инициализирует все необходимое для работы
     function __construct($settings) {
 
         # Инициализация настроек,
