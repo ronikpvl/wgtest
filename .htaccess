@@ -11,3 +11,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index/index.php?url=$1 [L,QSA]
 
 DirectoryIndex /index/index.php
+
