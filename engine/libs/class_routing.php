@@ -17,9 +17,6 @@ class Routing{
     function __construct($settings) {
         $this->initSettings($settings);
         $this->parseRequestData();
-
-        echo "<pre>";
-        print_r($this);
     }
 
 
