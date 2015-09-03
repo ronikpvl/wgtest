@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 use \Smarty;
 
 
-require_once("../engine/libs/class_routing.php");
+require_once("../engine/libs/ClassRouting.php");
 
 $paths         = array($doctrina_paths_entity_files);
 $isDevMode     = false;
