@@ -2,41 +2,58 @@
 class Routing{
     private  $is_error = 0;
     private  $error_type = 0;
-    private  $current_url;
     public   $controller;
     public   $action;
     public   $include_path_controller;
     public   $settings;
 
-    /*
+
+
+    /**
      * __construct
      *
-     * $settings (array) - settings array initialized in global settings file (/engine/settings/settings.php)
+     * @param $settings - settings array initialized in global settings file (/engine/settings/settings.php)
      */
 
     function __construct($settings) {
         $this->initSettings($settings);
-        $this->parseRequestData();
+        $this->initController();
     }
 
 
-    /*
+
+    /**
      * initSettings
      *
      * Check all inbox settings, checking controller files and directories.
      * If found error, call the setError method.
      *
-     *
-     * $settings (array) - settings array initialized in global settings file (/engine/settings/settings.php)
+     * @param $settings - settings array initialized in global settings file (/engine/settings/settings.php)
      */
 
     private function initSettings($settings){
-        $this->current_url = $_GET['url'];
+        $control_sum = 0;
 
-        $default_controller_file_name = $settings['path_directory_controller'] . $settings['default_controller'] .".php";
-        $error_controller_file_name   = $settings['path_directory_controller'] . $settings['error_controller'] .".php";
+        /** Checking in inner settings array all params on exist **/
+        if ($settings) {
+            foreach ($settings as $key => $val) {
+                if (is_string($settings['path_directory_controller'])) {
+                    $control_sum += 1;
+                }
+            }
+        }
 
-        if ($settings['path_directory_controller'] && $settings['default_controller'] && file_exists($error_controller_file_name) && file_exists($default_controller_file_name)) {
+        /** Checking default controller files on exist **/
+        if ($control_sum === count($settings)) {
+            $default_controller_file_name = $settings['path_directory_controller'] . $settings['default_controller'] . ".php";
+            $error_controller_file_name   = $settings['path_directory_controller'] . $settings['error_controller'] . ".php";
+
+            if (!file_exists($error_controller_file_name) || !file_exists($default_controller_file_name)) {
+                $control_sum -= 2;
+            }
+        }
+
+        if ($control_sum === count($settings)) {
             $this->settings = $settings;
         }
         else{
@@ -45,13 +62,14 @@ class Routing{
     }
 
 
-    /*
+
+    /**
      * setError
      *
      * Setting the error flag and error type name.
      * If inbox value is empty, call exit(), stop the script.
      *
-     * $error_type_name (string) - error type name;
+     * @param $error_type_name - error type name;
      */
 
     private function setError($error_type_name){
@@ -68,25 +86,30 @@ class Routing{
     }
 
 
-    /*
+
+    /**
      * parseRequestData
      *
      * Parsing $_GET['url'], find and extract controller/action name
      * If $_GET['url'] empty setting default controller
      */
 
-    private function parseRequestData(){
-        if ($this->is_error == 0) {
-            if ($this->current_url) {
-                list($this->controller, $this->action) = explode("/", $_GET['url'], 2);
+    private function initController(){
+        if ($this->is_error === 0) {
+            if (strlen($_SERVER['REQUEST_URI']) > 1) {
+                list($this->controller, $this->action, $tmp) = preg_split("/\//", $_SERVER['REQUEST_URI'], 3, PREG_SPLIT_NO_EMPTY);
+            }
+            else {
+                $this->controller = $this->settings['default_controller'];
             }
 
-            $this->initController();
+            $this->checkController();
         }
     }
 
 
-    /*
+
+    /**
      * errorProcess
      *
      * Processing all errors and find the correct way to solve the problems
@@ -105,28 +128,29 @@ class Routing{
                 }
                 case 'not_found_controller_file': {
                     $this->controller = $this->settings['error_controller'];
+                    $this->action     = "";
                     break;
                 }
 
                 # Если тип ошибки не определен, вызываем 404
                 default: {
                     $this->controller = $this->settings['error_controller'];
+                    $this->action     = "";
                 }
             }
         }
     }
 
 
-    /*
+
+    /**
+     * checkController
      *
+     * Checking current controller param and script on exist
      */
 
-    private function initController(){
-        if (!$this->current_url || !$this->controller){
-            $this->controller = $this->settings['default_controller'];
-        }
-
-        if (!file_exists($this->settings['path_directory_controller'] . $this->controller . ".php")){
+    private function checkController(){
+        if (!file_exists($this->settings['path_directory_controller'] . $this->controller . ".php") || !$this->controller){
             $this->setError("not_found_controller_file");
         }
     }

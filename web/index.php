@@ -1,4 +1,5 @@
 <?php
+
 require_once("../vendor/autoload.php");
 
 # db connect settings
@@ -9,6 +10,15 @@ require_once("../engine/settings/settings.php");
 
 # initialization all engine: classes, libs, modules
 require_once("../engine/settings/initialization.php");
+
+
+
+
+
+
+
+
+
 
 /*
 $sql = "SHOW TABLES";
@@ -61,5 +71,5 @@ echo "</pre>";
         }
     }
 */
-$smarty->display('index.tpl');
+//$smarty->display('index.tpl');
 ?>
