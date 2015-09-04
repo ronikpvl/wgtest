@@ -36,19 +36,17 @@ class Routing{
      */
 
     private function initSettings($settings){
-        $control_sum = 0;
-
         /** Checking in inner settings array all params on exist **/
         if ($settings) {
             foreach ($settings as $key => $val) {
-                if (is_string($settings['path_directory_controller'])) {
+                if (!is_string($settings['path_directory_controller'])) {
                     $this->is_setting_error = 1;
                 }
             }
         }
 
         /** Checking default controller files on exist **/
-        if ($this->is_setting_error === 0) {
+        if ($this->is_setting_error == 0) {
             $default_controller_file_name = $settings['path_directory_controller'] . $settings['default_controller'] . ".php";
             $error_controller_file_name   = $settings['path_directory_controller'] . $settings['error_controller'] . ".php";
 
@@ -57,7 +55,7 @@ class Routing{
             }
         }
 
-        if ($this->is_setting_error === 0) {
+        if ($this->is_setting_error == 0) {
             $this->settings = $settings;
         }
         else{
@@ -107,11 +105,12 @@ class Routing{
                 $this->controller = $this->settings['default_controller'];
             }
 
-            $this->checkController();
+
+            if (!file_exists($this->settings['path_directory_controller'] . $this->controller . ".php")){
+                $this->setError("not_found_controller_file");
+            }
         }
     }
-
-
 
     /**
      * errorProcess
@@ -142,20 +141,6 @@ class Routing{
                     $this->action     = "";
                 }
             }
-        }
-    }
-
-
-
-    /**
-     * checkController
-     *
-     * Checking current controller param and script on exist
-     */
-
-    private function checkController(){
-        if (!file_exists($this->settings['path_directory_controller'] . $this->controller . ".php") || !$this->controller){
-            $this->setError("not_found_controller_file");
         }
     }
 }
