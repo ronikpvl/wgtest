@@ -2,6 +2,7 @@
 class Routing{
     private  $is_error = 0;
     private  $error_type = 0;
+    private  $is_setting_error = 0;
     public   $controller;
     public   $action;
     public   $include_path_controller;
@@ -18,6 +19,9 @@ class Routing{
     function __construct($settings) {
         $this->initSettings($settings);
         $this->initController();
+
+        echo "<pre>";
+        print_r($this);
     }
 
 
@@ -38,22 +42,22 @@ class Routing{
         if ($settings) {
             foreach ($settings as $key => $val) {
                 if (is_string($settings['path_directory_controller'])) {
-                    $control_sum += 1;
+                    $this->is_setting_error = 1;
                 }
             }
         }
 
         /** Checking default controller files on exist **/
-        if ($control_sum === count($settings)) {
+        if ($this->is_setting_error === 0) {
             $default_controller_file_name = $settings['path_directory_controller'] . $settings['default_controller'] . ".php";
             $error_controller_file_name   = $settings['path_directory_controller'] . $settings['error_controller'] . ".php";
 
             if (!file_exists($error_controller_file_name) || !file_exists($default_controller_file_name)) {
-                $control_sum -= 2;
+                $this->is_setting_error = 1;
             }
         }
 
-        if ($control_sum === count($settings)) {
+        if ($this->is_setting_error === 0) {
             $this->settings = $settings;
         }
         else{
@@ -97,7 +101,7 @@ class Routing{
     private function initController(){
         if ($this->is_error === 0) {
             if (strlen($_SERVER['REQUEST_URI']) > 1) {
-                list($this->controller, $this->action, $tmp) = preg_split("/\//", $_SERVER['REQUEST_URI'], 3, PREG_SPLIT_NO_EMPTY);
+                list($this->controller, $this->action, ) = preg_split("/\//", $_SERVER['REQUEST_URI'], 3, PREG_SPLIT_NO_EMPTY);
             }
             else {
                 $this->controller = $this->settings['default_controller'];
