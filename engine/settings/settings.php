@@ -15,10 +15,12 @@ $smarty_compile_dir  = "../engine/templates_c/";
 
 // Настройки для класса Routing
 
-$class_route_settings = array(
-                                'path_directory_controller' => $_SERVER['DOCUMENT_ROOT'].'/engine/controller/',
-                                'default_controller'        => 'mainpage',
-                                'error_controller'          => '404'
+$class_controller_settings = array(
+                                'controller_directory_path'     => $_SERVER['DOCUMENT_ROOT'].'/engine/controller/',
+                                'controller_default'            => 'mainPage',
+                                'controller_error'              => '404',
+                                'action_default'                => 'indexAction',
+                                'controller_property_file_path' => $_SERVER['DOCUMENT_ROOT'].'/engine/settings/controller.json'
                             );
 
 $doctrina_paths_entity_files = "/path/to/entity-files";

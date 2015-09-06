@@ -1,0 +1,11 @@
+{
+    "mainpage":{
+        "is_active"    : 1,
+        "is_auth_only" : 0
+    },
+
+    "404":{
+        "is_active"    : 1,
+        "is_auth_only" : 0
+    }
+}

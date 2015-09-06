@@ -1,1 +1,8 @@
-Выводим тут тест {$param}!!!!gfhfjhfg
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+ads
+</body>
+</html>
