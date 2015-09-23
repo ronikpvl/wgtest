@@ -1,4 +1,6 @@
 <?php
+namespace Application\Libs;
+
 /**
  * Created by PhpStorm.
  * User: info_000
@@ -15,7 +17,7 @@ class Controller{
     public  $controller;
     public  $action;
     public  $property;
-
+/*
     function __construct($routing, $settings){
         $this->initSettings($settings);
         $this->initRouting($routing);
@@ -24,7 +26,7 @@ class Controller{
 
         echo "<pre>";
         print_r($this);
-    }
+    }*/
 
     function initControllerProperty(){
         $property_file  = file_get_contents($this->settings['controller_property_file_path']);
@@ -70,7 +72,7 @@ class Controller{
      * Check all inbox settings, checking controller files and directories.
      * If found error, call the setError method.
      *
-     * @param array $settings - settings array initialized in global settings file (/engine/settings/settings.php)
+     * @param array $settings - settings array initialized in global settings file (/application/settings/settings.php)
      */
 
     private function initSettings($settings){

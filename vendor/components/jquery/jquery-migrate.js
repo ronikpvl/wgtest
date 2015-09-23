@@ -297,7 +297,7 @@ jQuery.sub = function() {
 };
 
 
-// Ensure that $.ajax gets the new parseJSON defined in core.js
+// Ensure that $.ajax gets the new parseJSON defined in application.js
 jQuery.ajaxSetup({
 	converters: {
 		"text json": jQuery.parseJSON

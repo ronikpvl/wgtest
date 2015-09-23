@@ -1,16 +1,71 @@
 <?php
-require_once("../vendor/autoload.php");
+
+require_once($_SERVER['DOCUMENT_ROOT']."/application/initialization.php");
+
+
+
+
+
+echo '<pre>';
+//print_r($data);
+print_r($route);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 
 # db connect settings
-require_once("../engine/settings/db_settings.php");
-
-# engine settings
-require_once("../engine/settings/settings.php");
-
-# initialization all engine: classes, libs, modules
-require_once("../engine/settings/initialization.php");
 
 
+# application settings
+
+
+# initialization all application: classes, libs, modules
+
+
+*/
 
 
 /*
@@ -25,12 +80,8 @@ $smarty->assign('param', '1111');
 
 */
 
-/*
-echo "<pre>";
-print_r($routing);
-echo "</pre>";*/
 
-//require_once($routing->controller_file_path);
 
-//$smarty->display('index.tpl');
+
+
 ?>

@@ -6,9 +6,11 @@
  * Time: 1:17
  */
 
+namespace Application\Libs;
+
 class Data{
-    protected $get;
-    protected $post;
+    public $get;
+    public $post;
     protected $url_params;
 
     function __construct(){
@@ -50,6 +52,7 @@ class Data{
         }
     }
 
+    // !!!!!!!!!!!!!!!! НАЙТИ ВАРИАНТ ОЧИСТКИ
     private function clearData($data){
         if ($data){
             // Если нужно удалить все тэги

@@ -261,11 +261,11 @@ class DrizzlePlatform extends AbstractPlatform
         $tableOptions[] = sprintf('COLLATE %s', $options['collate']);
 
         // Engine
-        if ( ! isset($options['engine'])) {
-            $options['engine'] = 'InnoDB';
+        if ( ! isset($options['application'])) {
+            $options['application'] = 'InnoDB';
         }
 
-        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
+        $tableOptions[] = sprintf('ENGINE = %s', $options['application']);
 
         // Auto increment
         if (isset($options['auto_increment'])) {

@@ -29,7 +29,7 @@ use Doctrine\DBAL\Types\TextType;
 /**
  * The MySqlPlatform provides the behavior, features and SQL dialect of the
  * MySQL database platform. This platform represents a MySQL 5.0 or greater platform that
- * uses the InnoDB storage engine.
+ * uses the InnoDB storage application.
  *
  * @since  2.0
  * @author Roman Borschel <roman@code-factory.org>
@@ -423,8 +423,8 @@ class MySqlPlatform extends AbstractPlatform
         $sql[]  = $query;
         $engine = 'INNODB';
 
-        if (isset($options['engine'])) {
-            $engine = strtoupper(trim($options['engine']));
+        if (isset($options['application'])) {
+            $engine = strtoupper(trim($options['application']));
         }
 
         // Propagate foreign key constraints only for InnoDB.
@@ -480,11 +480,11 @@ class MySqlPlatform extends AbstractPlatform
         $tableOptions[] = sprintf('COLLATE %s', $options['collate']);
 
         // Engine
-        if ( ! isset($options['engine'])) {
-            $options['engine'] = 'InnoDB';
+        if ( ! isset($options['application'])) {
+            $options['application'] = 'InnoDB';
         }
 
-        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
+        $tableOptions[] = sprintf('ENGINE = %s', $options['application']);
 
         // Auto increment
         if (isset($options['auto_increment'])) {
@@ -656,8 +656,8 @@ class MySqlPlatform extends AbstractPlatform
 
         $engine = 'INNODB';
 
-        if ($diff->fromTable instanceof Table && $diff->fromTable->hasOption('engine')) {
-            $engine = strtoupper(trim($diff->fromTable->getOption('engine')));
+        if ($diff->fromTable instanceof Table && $diff->fromTable->hasOption('application')) {
+            $engine = strtoupper(trim($diff->fromTable->getOption('application')));
         }
 
         // Suppress foreign key constraint propagation on non-supporting engines.

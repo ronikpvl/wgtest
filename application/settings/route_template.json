@@ -1,0 +1,13 @@
+{
+    "default":{
+        "url_template"              : "/",
+        "controller_param_position" : "0",
+        "action_param_position"     : "1"
+    },
+
+    "admin":{
+        "url_template"              : "/admin",
+        "controller_param_position" : "1",
+        "action_param_position"     : "2"
+    }
+}
