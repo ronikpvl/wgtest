@@ -11,26 +11,12 @@ class Route{
     private  $controller_default;
     private  $action_default;
     private  $controller_error;
-    private  $controller_property_file_path;
-    private  $route_template_file_path;
     private  $route_template_name_default;
     private  $is_error = 0;
-    private  $error_type;
-    private  $error_line;
-    private  $error_file;
-    private  $settings;
-    public   $controller_property;
+    private  $error_data;
+    private  $controller_property;
     private  $route_template;
     private  $route_template_name;
-
-
-    /**
-     * __construct
-     */
-
-    function __construct($settings) {
-        $this->initSettings($settings);
-    }
 
 
     /**
@@ -39,7 +25,8 @@ class Route{
      * Starting this class
      */
 
-    public function start(){
+    public function start($settings){
+        $this->initSettings($settings);
         $this->initRouteTemplate();
         $this->parseUrl();
     }
@@ -52,19 +39,13 @@ class Route{
      */
 
     private function initRouteTemplate(){
-        if (!$this->route_template->default){
-            $this->setError('not_init_route_template', __FILE__, __LINE__);
-        }
+        $this->route_template->default ? : $this->setError('not_init_route_template', __FILE__, __LINE__);
 
         foreach($this->route_template as $key=>$val){
-            if (strpos($_SERVER['REQUEST_URI'], $val->url_template) && $key != $this->route_template_name_default){
-                $this->route_template_name = $key;
-            }
+           (strpos($_SERVER['REQUEST_URI'], $val->url_template) && $key != $this->route_template_name_default) ? $this->route_template_name = $key : false;
         }
 
-        if (!$this->route_template_name){
-            $this->route_template_name = $this->route_template_name_default;
-        }
+        $this->route_template_name ? : $this->route_template_name = $this->route_template_name_default;
     }
 
     /**
@@ -98,22 +79,11 @@ class Route{
      */
 
     private function setController($controller = ''){
-        if ($controller){
-            $this->controller = $this->getFormatedController($controller);
-        }
-        else{
-            $this->controller = $this->getFormatedController($this->controller_default);
-        }
+        $this->controller           = $controller ? $this->getFormatedNameController($controller) : $this->getFormatedNameController($this->controller_default);
+        $this->controller_file_name = $this->controller . $this->controller_prefix . '.php';
+        $this->controller_file_path = $this->controller_directory_path.$this->controller_file_name;
 
-        if (!$this->controller){
-            $this->controller = $this->getFormatedController($this->controller_default); //$this->setController($this->controller_default);
-        }
-
-        $this->setControllerFileName();
-
-        if ($this->checkControllerFileName() === false){
-            $this->setError('not_found_controller_file', __FILE__, __LINE__);
-        }
+        file_exists($this->controller_file_path) ? : $this->setError('not_found_controller_file', __FILE__, __LINE__);
     }
 
 
@@ -126,17 +96,12 @@ class Route{
      */
 
     private function setAction($action = ''){
-        if (!$action){
-            $this->action = $this->action_default;
-        }
-        else{
-            $this->action = $action;
-        }
+        $this->action = $action ? $action : $this->action_default;
     }
 
 
     /**
-     * getFormatedController
+     * getFormatedNameController
      *
      * Format input controller
      *
@@ -144,43 +109,12 @@ class Route{
      * @return mixed|string
      */
 
-    private function getFormatedController($controller){
+    private function getFormatedNameController($controller){
         $controller = preg_replace("/[^0-9a-zA-Zа-яА-Я]/", " ", $controller);
         $controller = mb_convert_case($controller, 2, "UTF8");
         $controller = preg_replace("/[^0-9a-zA-Zа-яА-Я]/", "", $controller);
 
         return $controller;
-    }
-
-
-    /**
-     * setControllerFileName
-     *
-     * Set controller file name and full absolute directory name
-     *
-     */
-
-    private function setControllerFileName(){
-        $this->controller_file_name = $this->controller . $this->controller_prefix . '.php';
-        $this->controller_file_path = $this->controller_directory_path.$this->controller_file_name;
-    }
-
-
-    /**
-     * checkControllerFileName
-     *
-     * Check controller file on exist
-     *
-     * @return bool
-     */
-
-    private function checkControllerFileName(){
-        if (file_exists($this->controller_file_path)) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 
 
@@ -197,9 +131,7 @@ class Route{
         /** Checking in inner settings array all params on exist **/
         if ($settings) {
             foreach ($settings as $key => $val) {
-                if (!$val) {
-                    $this->setError('not_init_settings', __FILE__, __LINE__);
-                }
+                $val ? : $this->setError('not_init_settings', __FILE__, __LINE__);
             }
         }
 
@@ -212,15 +144,13 @@ class Route{
         );
 
         foreach ($need_check_files as $key => $val){
-            if (!file_exists($val)) {
-                $this->setError('not_init_settings', __FILE__, __LINE__);
-            }
+            file_exists($val) ? : $this->setError('not_init_settings', __FILE__, __LINE__);
         }
 
         $this->controller_property = json_decode(file_get_contents($settings['controller_property_file_path']));
         $this->route_template      = json_decode(file_get_contents($settings['route_template_file_path']));
 
-        if (!$this->controller_property || !$this->route_template){
+        if (!$this->controller_property && !$this->route_template) {
             $this->setError('not_init_settings', __FILE__, __LINE__);
         }
 
@@ -240,20 +170,18 @@ class Route{
      */
 
     private function setError($error_type_name, $file, $line){
-        $this->is_error   = 1;
-        $this->error_type = $error_type_name;
-        $this->error_file = $file;
-        $this->error_line = $line;
+        $this->is_error = 1;
+        $this->error_data['error_type'] = $error_type_name;
+        $this->error_data['error_file'] = $file;
+        $this->error_data['error_line'] = $line;
 
         $this->errorProcess();
     }
 
 
-    private function setErrorNull(){
-        $this->is_error   = 0;
-        $this->error_type = '';
-        $this->error_file = '';
-        $this->error_line = '';
+    private function unsetError(){
+        $this->is_error = 0;
+        $this->error_data = array();
     }
 
 
@@ -266,25 +194,25 @@ class Route{
     private function errorProcess(){
         if ($this->is_error) {
             # Происходит перебор возможных типов ошибок роутинга
-            switch ($this->error_type) {
+            switch ($this->error_data['error_type']) {
 
                 case 'not_init_settings': {
-                    die("Fatal error: Route :: settings not init, ($this->error_file) $this->error_line");
+                    die("Fatal error: Route :: settings not init, ($this->error_data['error_file']) $this->error_data['error_line'])");
                     break;
                 }
 
                 case 'not_init_controller': {
-                    die("Fatal error: Route :: controller not init, ($this->error_file) $this->error_line");
+                    die("Fatal error: Route :: controller not init, ($this->error_data['error_file']) $this->error_data['error_line'])");
                     break;
                 }
 
                 case 'not_init_route_template': {
-                    die("Fatal error: Route :: default route template not init, ($this->error_file) $this->error_line");
+                    die("Fatal error: Route :: default route template not init, ($this->error_data['error_file']) $this->error_data['error_line'])");
                     break;
                 }
 
                 case 'not_found_controller_file': {
-                    $this->setErrorNull();
+                    $this->unsetError();
 
                     $this->setController($this->controller_error);
                     $this->setAction($this->action_default);
@@ -293,7 +221,7 @@ class Route{
 
                 # Если тип ошибки не определен, вызываем 404
                 default: {
-                    $this->setErrorNull();
+                    $this->unsetError();
 
                     $this->setController($this->controller_error);
                     $this->setAction($this->action_default);

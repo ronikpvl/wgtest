@@ -11,6 +11,17 @@ echo '<pre>';
 print_r($route);
 
 
+function aaa(){
+    echo '1111';
+}
+
+
+function bbb(){
+    echo '222';
+}
+
+//$a=1;
+
 
 
 

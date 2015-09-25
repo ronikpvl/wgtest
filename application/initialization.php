@@ -31,8 +31,8 @@ $config     = Setup::createAnnotationMetadataConfiguration($paths, true);
 $db         = EntityManager::create($dbParams, $config);
 
 $data       = new Data();
-$route      = new Route($route_settings);
+$route      = new Route();
 $controller = new Controller();
 
 
-$route->start();
+$route->start($route_settings);
